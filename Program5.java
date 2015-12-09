@@ -121,7 +121,6 @@ public class Program5 extends Application {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		//launch(args);
-		System.out.println("This is a test change as well.");
+		launch(args);
 	}
 }
