@@ -122,7 +122,6 @@ public class Program5 extends Application {
 	 */
 	public static void main(String[] args) {
 		//launch(args);
-		System.out.println("test");
-		
+		System.out.println("This is a test change as well.");
 	}
 }
