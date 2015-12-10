@@ -18,11 +18,16 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
 public class Program5 extends Application {
 	// INSTANCE VARIABLES
 	// These variables are included to get you started.
-	private Stage mystage = null;
+
 	private WebView browser = null;
 	private WebEngine webEngine = null;
 	private TextField statusbar = null;
@@ -30,6 +35,7 @@ public class Program5 extends Application {
 	Button buttonforward = new Button("->");
 	Button buttonhelp = new Button("?");
 	TextField addressbar = new TextField();
+	Button close = new Button("x");
 
 	// HELPER METHODS
 	/**
@@ -85,38 +91,71 @@ public class Program5 extends Application {
 	@Override
 	public void start(Stage stage) {
 		Group root = new Group();
+
 		Scene scene = new Scene(root, 500, 500);
 
-		buttonhelp.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent event){
-				webEngine.load("https://support.google.com/");
-				System.out.println("maybe");
+		buttonhelp.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				Group roothelp = new Group();
+				Scene help = new Scene(roothelp, scene.getWidth(), scene.getHeight());
+				help.setFill(Color.BLACK);
+				HBox xbox = new HBox();
+				Text text = new Text(scene.getWidth()*0.25, 120, "Welcome to the Unlicensed Web Browser Mk.1");
+				text.setFill(Color.rgb(127, 244, 16));
+				text.setFont(Font.font ("Verdana", 20));
+				roothelp.getChildren().add(text);
+				xbox.getChildren().add(close);
+				roothelp.getChildren().add(xbox);
+				stage.setScene(help);
+				stage.show();
+
 			}
-			});
-		buttonback.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent event){
-				final WebHistory history=webEngine.getHistory();
-			    ObservableList<WebHistory.Entry> entryList=history.getEntries();
-			    int currentIndex=history.getCurrentIndex();
-			    Platform.runLater(new Runnable() { public void run() { history.go(-1); } });
-			}
-			});
-		buttonforward.setOnAction(new EventHandler<ActionEvent>(){
-			public void handle(ActionEvent event){
-				
+		});
+		buttonback.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				final WebHistory history = webEngine.getHistory();
+				ObservableList<WebHistory.Entry> entryList = history.getEntries();
+				int currentIndex = history.getCurrentIndex();
+				Platform.runLater(new Runnable() {
+					public void run() {
+						history.go(-1);
+					}
+				});
 			}
 		});
 
-	BorderPane border = new BorderPane();
-	HBox thbox = new HBox();thbox.setPrefWidth(scene.getWidth());HBox.setHgrow(thbox,Priority.ALWAYS);addressbar.setMaxWidth(scene.getWidth()-buttonback.getWidth()-buttonforward.getWidth()-buttonhelp.getWidth());thbox.getChildren().addAll(buttonback,buttonforward,addressbar,buttonhelp);HBox.setHgrow(addressbar,Priority.ALWAYS);border.setTop(thbox);border.setBottom(
+		buttonforward.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
 
-	makeStatusBar());
+			}
+		});
+		close.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				stage.setScene(scene);
+				stage.show();
+			}
+		});
+
+		BorderPane border = new BorderPane();
+		HBox thbox = new HBox();
+		thbox.setPrefWidth(scene.getWidth());
+		HBox.setHgrow(thbox, Priority.ALWAYS);
+		addressbar.setMaxWidth(
+				scene.getWidth() - buttonback.getWidth() - buttonforward.getWidth() - buttonhelp.getWidth());
+		thbox.getChildren().addAll(buttonback, buttonforward, addressbar, buttonhelp);
+		HBox.setHgrow(addressbar, Priority.ALWAYS);
+		border.setTop(thbox);
+		border.setBottom(
+
+		makeStatusBar());
 		border.setCenter(makeHtmlBrowser());
 		root.getChildren().add(border);
-		//stage.setWidth(scene.getWidth());
-		//stage.setHeight(scene.getHeight());
-		addressbar.setText(webEngine.getLocation());//is this the right text?  &&&needs to be refreshed every click
-		stage.setTitle(webEngine.getLocation());//also needs to be refreshed
+		// stage.setWidth(scene.getWidth());
+		// stage.setHeight(scene.getHeight());
+		addressbar.setText(webEngine.getLocation());// is this the right text?
+													// &&&needs to be refreshed
+													// every click
+		stage.setTitle(webEngine.getLocation());// also needs to be refreshed
 		stage.setScene(scene);
 		stage.show();
 
