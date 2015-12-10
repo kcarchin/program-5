@@ -188,18 +188,10 @@ public class Program5 extends Application {
 					} else {
 						webEngine.load(("https://" + addressbar.getText()));
 					}
-					new java.util.Timer().schedule( 
-							new java.util.TimerTask() {
-								@Override
-								public void run() {
-									addressbar.setText("");
-									addressbar.setText(webEngine.getLocation());
-									stage.setTitle(webEngine.getLocation());
-								}
-							}, 
-							1000
-							);
-
+					addressbar.setText("");
+					addressbar.setText(webEngine.getLocation());
+					stage.setTitle(webEngine.getLocation());
+//removed timer due to errors, but now after entering into a search field like youtube, the url doesn't update after pressing enter
 				}
 			}
 		});
