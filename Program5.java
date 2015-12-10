@@ -1,51 +1,24 @@
-/**
- * @TITLE Program5
- * @COURSE CS 1121 Introduction to Programming
- * @AUTHOR
- * @CREATED 
- * @DESCRIPTION 
- */
-
-/**
- * MODIFICATION HISTORY
- * @CREATED
- * @UPDATED
- */
-
-// IMPORTS
-// These are some classes that may be useful for completing the project.
-// You may have to add others.
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebEvent;
+import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import javafx.concurrent.Worker.State;
-import javafx.concurrent.Worker;
 
-/**
- * The main class for Program5. Program5 constructs the JavaFX window and
- * handles interactions with the dynamic components contained therein.
- */
 public class Program5 extends Application {
 	// INSTANCE VARIABLES
 	// These variables are included to get you started.
@@ -53,6 +26,10 @@ public class Program5 extends Application {
 	private WebView browser = null;
 	private WebEngine webEngine = null;
 	private TextField statusbar = null;
+	Button buttonback = new Button("<-");
+	Button buttonforward = new Button("->");
+	Button buttonhelp = new Button("?");
+	TextField addressbar = new TextField();
 
 	// HELPER METHODS
 	/**
@@ -79,11 +56,12 @@ public class Program5 extends Application {
 	private WebView makeHtmlBrowser() {
 		browser = new WebView();
 		webEngine = browser.getEngine();
+		webEngine.load(getParameter(0));
 		return browser;
 	}
 
 	/**
-	 * Generates the status bar layout and text field.
+	 * hbox group Generates the status bar layout and text field.
 	 * 
 	 * @return statusbarPane - the HBox layout that contains the statusbar.
 	 */
@@ -100,34 +78,50 @@ public class Program5 extends Application {
 
 	// REQUIRED METHODS
 	/**
-	 * The main entry point for all JavaFX applications. The start method is
-	 * called after the init method has returned, and after the system is ready
-	 * for the application to begin running.
-	 * 
-	 * NOTE: This method is called on the JavaFX Application Thread.
-	 * 
 	 * @param primaryStage
 	 *            - the primary stage for this application, onto which the
 	 *            application scene can be set.
 	 */
 	@Override
 	public void start(Stage stage) {
-		// Build your window here.
 		Group root = new Group();
-		Scene scene = new Scene(root, 400, 300);
-		stage.setTitle("Shape Test");
+		Scene scene = new Scene(root, 500, 500);
+
+		buttonhelp.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent event){
+				webEngine.load("https://support.google.com/");
+				System.out.println("maybe");
+			}
+			});
+		buttonback.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent event){
+				final WebHistory history=webEngine.getHistory();
+			    ObservableList<WebHistory.Entry> entryList=history.getEntries();
+			    int currentIndex=history.getCurrentIndex();
+			    Platform.runLater(new Runnable() { public void run() { history.go(-1); } });
+			}
+			});
+		buttonforward.setOnAction(new EventHandler<ActionEvent>(){
+			public void handle(ActionEvent event){
+				
+			}
+		});
+
+	BorderPane border = new BorderPane();
+	HBox thbox = new HBox();thbox.setPrefWidth(scene.getWidth());HBox.setHgrow(thbox,Priority.ALWAYS);addressbar.setMaxWidth(scene.getWidth()-buttonback.getWidth()-buttonforward.getWidth()-buttonhelp.getWidth());thbox.getChildren().addAll(buttonback,buttonforward,addressbar,buttonhelp);HBox.setHgrow(addressbar,Priority.ALWAYS);border.setTop(thbox);border.setBottom(
+
+	makeStatusBar());
+		border.setCenter(makeHtmlBrowser());
+		root.getChildren().add(border);
+		//stage.setWidth(scene.getWidth());
+		//stage.setHeight(scene.getHeight());
+		addressbar.setText(webEngine.getLocation());//is this the right text?  &&&needs to be refreshed every click
+		stage.setTitle(webEngine.getLocation());//also needs to be refreshed
 		stage.setScene(scene);
 		stage.show();
+
 	}
 
-	/**
-	 * The main( ) method is ignored in JavaFX applications. main( ) serves only
-	 * as fallback in case the application is launched as a regular Java
-	 * application, e.g., in IDEs with limited FX support.
-	 *
-	 * @param args
-	 *            the command line arguments
-	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
