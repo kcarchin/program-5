@@ -100,12 +100,12 @@ public class Program5 extends Application {
 				Scene help = new Scene(roothelp, scene.getWidth(), scene.getHeight());
 				help.setFill(Color.BLACK);
 				HBox xbox = new HBox();
-				Text text = new Text(scene.getWidth() * 0.25, 120, "Welcome to the Unlicensed Light Web Browser Mk.1");
+				Text text = new Text(scene.getWidth() * 0.20, 120, "Welcome to the Unlicensed Light Web Browser 1.1");
 				text.setFill(Color.rgb(127, 244, 16));
 				text.setFont(Font.font("Verdana", 30));
 				roothelp.getChildren().add(text);
-				Text text2 = new Text(scene.getWidth() * 0.25, 200,
-						"-ULWB is a lightweight, java-based web browser. \n -In order to visit a website, type the url into the address bar. \n -Don't forget https:// protocol! Enjoy!");
+				Text text2 = new Text(scene.getWidth() * 0.20, 200,
+						"-ULWB is a lightweight, java-based web browser. \n-In order to visit a website, type the url into the address bar. \n-Unfortunately, the current distribution lacks video support, expect it in version 2.0. \n-Enjoy!");
 				text2.setFill(Color.rgb(127, 244, 16));
 				text2.setFont(Font.font("Verdana", 20));
 				roothelp.getChildren().add(text2);
@@ -155,12 +155,26 @@ public class Program5 extends Application {
 				stage.setTitle(webEngine.getLocation());
 			}
 		});
-		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent ke) {
 				if (ke.getCode().equals(KeyCode.ENTER)) {
-					webEngine.load((addressbar.getText()));
-					addressbar.setText(webEngine.getLocation());
-					stage.setTitle(webEngine.getLocation());
+					if (addressbar.getText().contains("https://")) {
+						webEngine.load(addressbar.getText());
+					} else {
+						webEngine.load(("https://" + addressbar.getText()));
+					}
+					new java.util.Timer().schedule( 
+					        new java.util.TimerTask() {
+					            @Override
+					            public void run() {
+					            	addressbar.setText("");
+									addressbar.setText(webEngine.getLocation());
+									stage.setTitle(webEngine.getLocation());
+					            }
+					        }, 
+					       1000
+					);
+					
 				}
 			}
 		});
@@ -178,7 +192,7 @@ public class Program5 extends Application {
 		root.getChildren().add(border);
 		stage.setWidth(scene.getWidth());
 		stage.setHeight(scene.getHeight());
-		addressbar.setText(webEngine.getLocation());// is this the right text
+		addressbar.setText("");// is this the right text
 		stage.setTitle(webEngine.getLocation());
 
 		stage.setScene(scene);

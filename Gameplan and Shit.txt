@@ -3,5 +3,4 @@ So this is basically for what we plan to do with the program and how we'll accom
 1. We still need a statusbar, but no-one doing the project knows how
 2. Better, happier help page
 3. Better Sizing
-4. Enter button support
 5. Maybe youtube video support, iffy on that
