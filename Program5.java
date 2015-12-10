@@ -9,25 +9,26 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.Group;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.scene.text.Font;
+
 public class Program5 extends Application {
 	// INSTANCE VARIABLES
 	// These variables are included to get you started.
-
 	private WebView browser = null;
 	private WebEngine webEngine = null;
 	private TextField statusbar = null;
@@ -91,8 +92,7 @@ public class Program5 extends Application {
 	@Override
 	public void start(Stage stage) {
 		Group root = new Group();
-
-		Scene scene = new Scene(root, 500, 500);
+		Scene scene = new Scene(root, 1200, 700);
 
 		buttonhelp.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -100,32 +100,45 @@ public class Program5 extends Application {
 				Scene help = new Scene(roothelp, scene.getWidth(), scene.getHeight());
 				help.setFill(Color.BLACK);
 				HBox xbox = new HBox();
-				Text text = new Text(scene.getWidth()*0.25, 120, "Welcome to the Unlicensed Web Browser Mk.1");
+				Text text = new Text(scene.getWidth() * 0.25, 120, "Welcome to the Unlicensed Light Web Browser Mk.1");
 				text.setFill(Color.rgb(127, 244, 16));
-				text.setFont(Font.font ("Verdana", 20));
+				text.setFont(Font.font("Verdana", 30));
 				roothelp.getChildren().add(text);
+				Text text2 = new Text(scene.getWidth() * 0.25, 200,
+						"-ULWB is a lightweight, java-based web browser. \n -In order to visit a website, type the url into the address bar. \n -Don't forget https:// protocol! Enjoy!");
+				text2.setFill(Color.rgb(127, 244, 16));
+				text2.setFont(Font.font("Verdana", 20));
+				roothelp.getChildren().add(text2);
 				xbox.getChildren().add(close);
 				roothelp.getChildren().add(xbox);
 				stage.setScene(help);
 				stage.show();
-
 			}
 		});
 		buttonback.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				final WebHistory history = webEngine.getHistory();
-				ObservableList<WebHistory.Entry> entryList = history.getEntries();
-				int currentIndex = history.getCurrentIndex();
 				Platform.runLater(new Runnable() {
 					public void run() {
 						history.go(-1);
+						addressbar.setText("");
+						addressbar.setText(webEngine.getLocation());
+						stage.setTitle(webEngine.getLocation());
 					}
 				});
 			}
 		});
-
 		buttonforward.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
+				final WebHistory history = webEngine.getHistory();
+				Platform.runLater(new Runnable() {
+					public void run() {
+						history.go(1);
+						addressbar.setText("");
+						addressbar.setText(webEngine.getLocation());
+						stage.setTitle(webEngine.getLocation());
+					}
+				});
 
 			}
 		});
@@ -135,30 +148,41 @@ public class Program5 extends Application {
 				stage.show();
 			}
 		});
-
+		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				addressbar.setText("");
+				addressbar.setText(webEngine.getLocation());
+				stage.setTitle(webEngine.getLocation());
+			}
+		});
+		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					webEngine.load((addressbar.getText()));
+					addressbar.setText(webEngine.getLocation());
+					stage.setTitle(webEngine.getLocation());
+				}
+			}
+		});
 		BorderPane border = new BorderPane();
 		HBox thbox = new HBox();
-		thbox.setPrefWidth(scene.getWidth());
+		thbox.setPrefWidth(scene.getWidth() - 20);
 		HBox.setHgrow(thbox, Priority.ALWAYS);
 		addressbar.setMaxWidth(
 				scene.getWidth() - buttonback.getWidth() - buttonforward.getWidth() - buttonhelp.getWidth());
 		thbox.getChildren().addAll(buttonback, buttonforward, addressbar, buttonhelp);
 		HBox.setHgrow(addressbar, Priority.ALWAYS);
 		border.setTop(thbox);
-		border.setBottom(
-
-		makeStatusBar());
+		border.setBottom(makeStatusBar());
 		border.setCenter(makeHtmlBrowser());
 		root.getChildren().add(border);
-		// stage.setWidth(scene.getWidth());
-		// stage.setHeight(scene.getHeight());
-		addressbar.setText(webEngine.getLocation());// is this the right text?
-													// &&&needs to be refreshed
-													// every click
-		stage.setTitle(webEngine.getLocation());// also needs to be refreshed
+		stage.setWidth(scene.getWidth());
+		stage.setHeight(scene.getHeight());
+		addressbar.setText(webEngine.getLocation());// is this the right text
+		stage.setTitle(webEngine.getLocation());
+
 		stage.setScene(scene);
 		stage.show();
-
 	}
 
 	public static void main(String[] args) {
