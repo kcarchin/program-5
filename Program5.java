@@ -32,11 +32,13 @@ public class Program5 extends Application {
 	private WebView browser = null;
 	private WebEngine webEngine = null;
 	private TextField statusbar = null;
-	Button buttonback = new Button("<-");
-	Button buttonforward = new Button("->");
-	Button buttonhelp = new Button("?");
+	Button buttonback = new Button("\u2B05");
+	Button buttonforward = new Button("\u27A1");
+	Button buttonhelp = new Button("\u003F");
 	TextField addressbar = new TextField();
-	Button close = new Button("x");
+	Button close = new Button("\u2718");
+	String helpPage = "Welcome to Browser Help";
+
 
 	// HELPER METHODS
 	/**
@@ -91,26 +93,48 @@ public class Program5 extends Application {
 	 */
 	@Override
 	public void start(Stage stage) {
+		// Creates default scene and help scene during "start" method.
 		Group root = new Group();
+		Group roothelp = new Group();
 		Scene scene = new Scene(root, 1200, 700);
+		Scene help = new Scene(roothelp, scene.getWidth(), scene.getHeight());
+			help.setFill(Color.BLACK);
+		HBox xbox = new HBox();
+		Text text = new Text(scene.getWidth() * 0.20, 120, "Welcome to the Unlicensed Light Web Browser 1.1");
+			text.setFill(Color.rgb(127, 244, 16));
+			text.setFont(Font.font("Verdana", 30));
+				roothelp.getChildren().add(text);
+		Text text2 = new Text(scene.getWidth() * 0.20, 200,
+				"-ULWB is a lightweight, java-based web browser. \n-In order to visit a website, click the \"x\" on the top left and type the url into the address bar. \n-Unfortunately, the current distribution lacks video support, expect it in version 2.0. \n-Enjoy!");
+			text2.setFill(Color.rgb(127, 244, 16));
+			text2.setFont(Font.font("Verdana", 20));
+			roothelp.getChildren().add(text2);
+			xbox.getChildren().add(close);
+			roothelp.getChildren().add(xbox);
+		BorderPane border = new BorderPane();
+		HBox thbox = new HBox();
+			thbox.setPrefWidth(scene.getWidth() - 20);
+		HBox.setHgrow(thbox, Priority.ALWAYS);
+			addressbar.setMaxWidth(
+				scene.getWidth() - buttonback.getWidth() - buttonforward.getWidth() - buttonhelp.getWidth());
+			thbox.getChildren().addAll(buttonback, buttonforward, addressbar, buttonhelp);
+		HBox.setHgrow(addressbar, Priority.ALWAYS);
+			border.setTop(thbox);
+			border.setBottom(makeStatusBar());
+			border.setCenter(makeHtmlBrowser());
+			root.getChildren().add(border);
+		stage.setWidth(scene.getWidth());
+		stage.setHeight(scene.getHeight());
+			addressbar.setText("");// is this the right text
+		stage.setTitle(helpPage);
+		stage.setScene(help);
+		stage.show();
 
+
+		// Begin ActionEvents and event handlers.
 		buttonhelp.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
-				Group roothelp = new Group();
-				Scene help = new Scene(roothelp, scene.getWidth(), scene.getHeight());
-				help.setFill(Color.BLACK);
-				HBox xbox = new HBox();
-				Text text = new Text(scene.getWidth() * 0.20, 120, "Welcome to the Unlicensed Light Web Browser 1.1");
-				text.setFill(Color.rgb(127, 244, 16));
-				text.setFont(Font.font("Verdana", 30));
-				roothelp.getChildren().add(text);
-				Text text2 = new Text(scene.getWidth() * 0.20, 200,
-						"-ULWB is a lightweight, java-based web browser. \n-In order to visit a website, type the url into the address bar. \n-Unfortunately, the current distribution lacks video support, expect it in version 2.0. \n-Enjoy!");
-				text2.setFill(Color.rgb(127, 244, 16));
-				text2.setFont(Font.font("Verdana", 20));
-				roothelp.getChildren().add(text2);
-				xbox.getChildren().add(close);
-				roothelp.getChildren().add(xbox);
+				stage.setTitle(helpPage);
 				stage.setScene(help);
 				stage.show();
 			}
@@ -145,6 +169,7 @@ public class Program5 extends Application {
 		close.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				stage.setScene(scene);
+				stage.setTitle(webEngine.getLocation());
 				stage.show();
 			}
 		});
@@ -164,39 +189,21 @@ public class Program5 extends Application {
 						webEngine.load(("https://" + addressbar.getText()));
 					}
 					new java.util.Timer().schedule( 
-					        new java.util.TimerTask() {
-					            @Override
-					            public void run() {
-					            	addressbar.setText("");
+							new java.util.TimerTask() {
+								@Override
+								public void run() {
+									addressbar.setText("");
 									addressbar.setText(webEngine.getLocation());
 									stage.setTitle(webEngine.getLocation());
-					            }
-					        }, 
-					       1000
-					);
-					
+								}
+							}, 
+							1000
+							);
+
 				}
 			}
 		});
-		BorderPane border = new BorderPane();
-		HBox thbox = new HBox();
-		thbox.setPrefWidth(scene.getWidth() - 20);
-		HBox.setHgrow(thbox, Priority.ALWAYS);
-		addressbar.setMaxWidth(
-				scene.getWidth() - buttonback.getWidth() - buttonforward.getWidth() - buttonhelp.getWidth());
-		thbox.getChildren().addAll(buttonback, buttonforward, addressbar, buttonhelp);
-		HBox.setHgrow(addressbar, Priority.ALWAYS);
-		border.setTop(thbox);
-		border.setBottom(makeStatusBar());
-		border.setCenter(makeHtmlBrowser());
-		root.getChildren().add(border);
-		stage.setWidth(scene.getWidth());
-		stage.setHeight(scene.getHeight());
-		addressbar.setText("");// is this the right text
-		stage.setTitle(webEngine.getLocation());
 
-		stage.setScene(scene);
-		stage.show();
 	}
 
 	public static void main(String[] args) {
