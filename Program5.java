@@ -58,34 +58,36 @@ public class Program5 extends Application {
 	/**
 	 * Retrieves the value of a command line argument specified by the index.
 	 * 
-	 * @param index - position of the argument in the args list.
+	 * @param index
+	 *            - position of the argument in the args list.
 	 * @return The value of the command line argument.
 	 */
-	private String getParameter( int index ) {
+	private String getParameter(int index) {
 		Parameters params = getParameters();
 		List<String> parameters = params.getRaw();
 		return !parameters.isEmpty() ? parameters.get(0) : "";
 	}
 
 	/**
-	 * Creates a WebView which handles mouse and some keyboard events, and 
-	 * manages scrolling automatically, so there's no need to put it into a ScrollPane.
-	 * The associated WebEngine is created automatically at construction time.
+	 * Creates a WebView which handles mouse and some keyboard events, and
+	 * manages scrolling automatically, so there's no need to put it into a
+	 * ScrollPane. The associated WebEngine is created automatically at
+	 * construction time.
 	 * 
-	 * @return browser - a WebView container for the WebEngine. 
+	 * @return browser - a WebView container for the WebEngine.
 	 */
-	private WebView makeHtmlBrowser( ) {
+	private WebView makeHtmlBrowser() {
 		browser = new WebView();
 		webEngine = browser.getEngine();
 		return browser;
 	}
-	
+
 	/**
 	 * Generates the status bar layout and text field.
 	 * 
 	 * @return statusbarPane - the HBox layout that contains the statusbar.
 	 */
-	private HBox makeStatusBar( ) {
+	private HBox makeStatusBar() {
 		HBox statusbarPane = new HBox();
 		statusbarPane.setPadding(new Insets(5, 4, 5, 4));
 		statusbarPane.setSpacing(10);
@@ -104,21 +106,27 @@ public class Program5 extends Application {
 	 * 
 	 * NOTE: This method is called on the JavaFX Application Thread.
 	 * 
-	 * @param primaryStage - the primary stage for this application, onto which 
-	 * the application scene can be set. 
+	 * @param primaryStage
+	 *            - the primary stage for this application, onto which the
+	 *            application scene can be set.
 	 */
 	@Override
 	public void start(Stage stage) {
 		// Build your window here.
+		Group root = new Group();
+		Scene scene = new Scene(root, 400, 300);
+		stage.setTitle("Shape Test");
+		stage.setScene(scene);
+		stage.show();
 	}
 
 	/**
-	 * The main( ) method is ignored in JavaFX applications.
-	 * main( ) serves only as fallback in case the application is launched
-	 * as a regular Java application, e.g., in IDEs with limited FX
-	 * support.
+	 * The main( ) method is ignored in JavaFX applications. main( ) serves only
+	 * as fallback in case the application is launched as a regular Java
+	 * application, e.g., in IDEs with limited FX support.
 	 *
-	 * @param args the command line arguments
+	 * @param args
+	 *            the command line arguments
 	 */
 	public static void main(String[] args) {
 		launch(args);
