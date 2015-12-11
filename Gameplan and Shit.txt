@@ -1,6 +1,5 @@
 So this is basically for what we plan to do with the program and how we'll accomplish it: (please keep word wrapping on)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 1. Need to set status bar to display hover location.
-2. Better, happier help page
-3. Better Sizing
-5. Maybe youtube video support, iffy on that
+2. (Different help page for each group) Better, happier help page
+3. Edit code to reflect minor differences such as title of the browser, names for variables etc for each group to avoid plagiarizing.
