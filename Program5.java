@@ -1,8 +1,13 @@
 import java.util.List;
 
+import org.w3c.dom.Document;
+
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -169,7 +174,7 @@ public class Program5 extends Application {
 		close.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				stage.setScene(scene);
-				stage.setTitle(webEngine.getLocation());
+				stage.setTitle("Please enter a website URL in the address bar below to begin");
 				stage.show();
 			}
 		});
@@ -177,7 +182,16 @@ public class Program5 extends Application {
 			public void handle(MouseEvent me) {
 				addressbar.setText("");
 				addressbar.setText(webEngine.getLocation());
-				stage.setTitle(webEngine.getLocation());
+				webEngine.getLoadWorker().stateProperty().addListener(
+				        new ChangeListener<State>() {
+				            public void changed(ObservableValue ov, State oldState, State newState) {
+				                if (newState == State.SUCCEEDED) {
+				                    stage.setTitle(webEngine.getTitle());
+				                    
+				                }
+				            }
+
+				        });
 			}
 		});
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -190,11 +204,23 @@ public class Program5 extends Application {
 					}
 					addressbar.setText("");
 					addressbar.setText(webEngine.getLocation());
-					stage.setTitle(webEngine.getLocation());
+					webEngine.getLoadWorker().stateProperty().addListener(
+					        new ChangeListener<State>() {
+					            public void changed(ObservableValue ov, State oldState, State newState) {
+					                if (newState == State.SUCCEEDED) {
+					                    stage.setTitle(webEngine.getTitle());
+					                    
+					                }
+					            }
+
+					        });
+					
+					
 //removed timer due to errors, but now after entering into a search field like youtube, the url doesn't update after pressing enter
 				}
 			}
 		});
+
 
 	}
 
