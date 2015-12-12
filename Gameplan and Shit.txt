@@ -3,4 +3,6 @@ So this is basically for what we plan to do with the program and how we'll accom
 1. Need to set status bar to display hover location.
 2. (Different help page for each group) Better, happier help page
 3. Edit code to reflect minor differences such as title of the browser, names for variables etc for each group to avoid plagiarizing.
-4. Enter key still doesn't work
+4. Enter key still doesn't work (meaning it doesn't update URL bar)
+
+5. I'll work on getting the status bar to work tonight. Leo told me how ---Wes
