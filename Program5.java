@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Group;
+import javafx.scene.web.WebEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -103,34 +104,34 @@ public class Program5 extends Application {
 		Group roothelp = new Group();
 		Scene scene = new Scene(root, 1200, 700);
 		Scene help = new Scene(roothelp, scene.getWidth(), scene.getHeight());
-			help.setFill(Color.BLACK);
+		help.setFill(Color.BLACK);
 		HBox xbox = new HBox();
 		Text text = new Text(scene.getWidth() * 0.20, 120, "Welcome to the Unlicensed Light Web Browser 1.1");
-			text.setFill(Color.rgb(127, 244, 16));
-			text.setFont(Font.font("Verdana", 30));
-				roothelp.getChildren().add(text);
+		text.setFill(Color.rgb(127, 244, 16));
+		text.setFont(Font.font("Verdana", 30));
+		roothelp.getChildren().add(text);
 		Text text2 = new Text(scene.getWidth() * 0.20, 200,
 				"-ULWB is a lightweight, java-based web browser. \n-In order to visit a website, click the \"x\" on the top left and type the url into the address bar. \n-Unfortunately, the current distribution lacks video support, expect it in version 2.0. \n-Enjoy!");
-			text2.setFill(Color.rgb(127, 244, 16));
-			text2.setFont(Font.font("Verdana", 20));
-			roothelp.getChildren().add(text2);
-			xbox.getChildren().add(close);
-			roothelp.getChildren().add(xbox);
+		text2.setFill(Color.rgb(127, 244, 16));
+		text2.setFont(Font.font("Verdana", 20));
+		roothelp.getChildren().add(text2);
+		xbox.getChildren().add(close);
+		roothelp.getChildren().add(xbox);
 		BorderPane border = new BorderPane();
 		HBox thbox = new HBox();
-			thbox.setPrefWidth(scene.getWidth() - 20);
+		thbox.setPrefWidth(scene.getWidth() - 20);
 		HBox.setHgrow(thbox, Priority.ALWAYS);
-			addressbar.setMaxWidth(
+		addressbar.setMaxWidth(
 				scene.getWidth() - buttonback.getWidth() - buttonforward.getWidth() - buttonhelp.getWidth());
-			thbox.getChildren().addAll(buttonback, buttonforward, addressbar, buttonhelp);
+		thbox.getChildren().addAll(buttonback, buttonforward, addressbar, buttonhelp);
 		HBox.setHgrow(addressbar, Priority.ALWAYS);
-			border.setTop(thbox);
-			border.setBottom(makeStatusBar());
-			border.setCenter(makeHtmlBrowser());
-			root.getChildren().add(border);
+		border.setTop(thbox);
+		border.setBottom(makeStatusBar());
+		border.setCenter(makeHtmlBrowser());
+		root.getChildren().add(border);
 		stage.setWidth(scene.getWidth());
 		stage.setHeight(scene.getHeight());
-			addressbar.setText("");// is this the right text
+		addressbar.setText("");// is this the right text
 		stage.setTitle(helpPage);
 		stage.setScene(help);
 		stage.show();
@@ -178,20 +179,21 @@ public class Program5 extends Application {
 				stage.show();
 			}
 		});
+
 		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent me) {
 				addressbar.setText("");
 				addressbar.setText(webEngine.getLocation());
 				webEngine.getLoadWorker().stateProperty().addListener(
-				        new ChangeListener<State>() {
-				            public void changed(ObservableValue ov, State oldState, State newState) {
-				                if (newState == State.SUCCEEDED) {
-				                    stage.setTitle(webEngine.getTitle());
-				                    
-				                }
-				            }
+						new ChangeListener<State>() {
+							public void changed(ObservableValue ov, State oldState, State newState) {
+								if (newState == State.SUCCEEDED) {
+									stage.setTitle(webEngine.getTitle());
 
-				        });
+								}
+							}
+
+						});
 			}
 		});
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -202,29 +204,38 @@ public class Program5 extends Application {
 					} else {
 						webEngine.load(("https://" + addressbar.getText()));
 					}
-					addressbar.setText("");
-					addressbar.setText(webEngine.getLocation());
 					webEngine.getLoadWorker().stateProperty().addListener(
-					        new ChangeListener<State>() {
-					            public void changed(ObservableValue ov, State oldState, State newState) {
-					                if (newState == State.SUCCEEDED) {
-					                    stage.setTitle(webEngine.getTitle());
-					                    
-					                }
-					            }
+							new ChangeListener<State>() {
+								public void changed(ObservableValue ov, State oldState, State newState) {
+									if (newState == State.SUCCEEDED) {
+										stage.setTitle(webEngine.getTitle());
+										addressbar.setText(webEngine.getLocation());
 
-					        });
+									}
+								}
+
+							});
+
+
+					//removed timer due to errors, but now after entering into a search field like youtube, the url doesn't update after pressing enter
+				}
+			}
+		});
+
+
+		webEngine.setOnStatusChanged( new EventHandler<WebEvent<String>>() {
+			public void handle(WebEvent<String> we) {
+				try {statusbar.setText(we.getData().toString());
+				
+				} catch (NullPointerException e) {
 					
-					
-//removed timer due to errors, but now after entering into a search field like youtube, the url doesn't update after pressing enter
 				}
 			}
 		});
 
 
 	}
-
-	public static void main(String[] args) {
-		launch(args);
-	}
-}
+			public static void main(String[] args) {
+				launch(args);
+			}
+		}
